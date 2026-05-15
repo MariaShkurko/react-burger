@@ -1,0 +1,6 @@
+.ingredient_list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
+  gap: 24px;
+}
