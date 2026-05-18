@@ -10,14 +10,12 @@ type TModalProps = {
   title?: string;
   onClose: () => void;
   children: ReactNode;
-  isOpen: boolean;
 };
 
 export const Modal = ({
   title,
   onClose,
   children,
-  isOpen,
 }: TModalProps): React.JSX.Element | null => {
   const modalRoot = document.getElementById('modal');
 
@@ -46,11 +44,11 @@ export const Modal = ({
     }
   };
 
-  if (!isOpen || !modalRoot) return null;
+  if (!modalRoot) return null;
 
   return createPortal(
     <>
-      <ModalOverlay isOpen={isOpen} onClose={handleOverlayClick} />
+      <ModalOverlay onClose={handleOverlayClick} />
       <div className={styles.modal}>
         <div className={styles.header}>
           <h2 className="text text_type_main-large">{title}</h2>

@@ -1,5 +1,5 @@
+import { useModal } from '@/hooks/useModal';
 import { Button, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
 
 import { BurgerConstructorIngredients } from '../burger-constructor-ingredients/burger-constructor-ingredients';
 import { Modal } from '../modal/modal';
@@ -20,7 +20,7 @@ export const BurgerConstructor = ({
   selectedIngredientIds,
   onDeleteIngredient,
 }: TBurgerConstructorProps): React.JSX.Element => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   const selectedIngredient = ingredients.filter(({ _id }) =>
     selectedIngredientIds.includes(_id)
@@ -30,11 +30,7 @@ export const BurgerConstructor = ({
     : 0;
 
   const onCreateOrder = (): void => {
-    setIsOpenModal(true);
-  };
-
-  const onCloseModal = (): void => {
-    setIsOpenModal(false);
+    openModal();
   };
 
   return (
@@ -58,9 +54,11 @@ export const BurgerConstructor = ({
         </Button>
       </div>
 
-      <Modal isOpen={isOpenModal} onClose={onCloseModal}>
-        <OrderDetails />
-      </Modal>
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <OrderDetails />
+        </Modal>
+      )}
     </section>
   );
 };

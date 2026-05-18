@@ -132,13 +132,11 @@ export const BurgerIngredients = ({
         />
       </div>
 
-      <Modal
-        isOpen={!!selectedIngredient}
-        onClose={handleCloseModal}
-        title="Детали ингредиента"
-      >
-        <IngredientDetails ingredient={selectedIngredient} />
-      </Modal>
+      {!!selectedIngredient && (
+        <Modal onClose={handleCloseModal} title="Детали ингредиента">
+          <IngredientDetails ingredient={selectedIngredient} />
+        </Modal>
+      )}
     </section>
   );
 };

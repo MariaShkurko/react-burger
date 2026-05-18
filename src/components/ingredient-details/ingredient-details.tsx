@@ -13,7 +13,7 @@ export const IngredientDetails = ({
 
   return (
     <div className={styles.ingredient_details}>
-      <img className={styles.image} src={ingredient.image_large} />
+      <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
       <p className="text text_type_main-medium mb-8">{ingredient.name}</p>
       <div className={styles.nutrients_block}>
         <div className={styles.nutrient}>
