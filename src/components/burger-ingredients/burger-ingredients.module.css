@@ -13,3 +13,8 @@
   text-align: center;
   list-style-type: none;
 }
+
+.ingredients_block {
+  height: 64vh;
+  overflow-y: auto;
+}

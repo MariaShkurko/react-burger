@@ -1,0 +1,17 @@
+.ingredient_item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 208px;
+}
+
+.ingredient_image {
+  display: block;
+}
+
+.ingredient_price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

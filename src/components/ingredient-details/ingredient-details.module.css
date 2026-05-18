@@ -1,0 +1,23 @@
+.ingredient_details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nutrients_block {
+  display: flex;
+  gap: calc(var(--offset-base-size) * 5);
+}
+
+.nutrient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-inactive-color);
+}
+
+.image {
+  width: 520px;
+  margin-bottom: 16px;
+}

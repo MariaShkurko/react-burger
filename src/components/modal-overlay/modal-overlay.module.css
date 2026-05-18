@@ -1,0 +1,7 @@
+.modal_overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgb(0 0 0 / 60%);
+  cursor: pointer;
+}
