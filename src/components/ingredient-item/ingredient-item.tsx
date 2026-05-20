@@ -1,4 +1,4 @@
-import { setSelectedIngredient } from '@/services/ingredient-details-slice';
+import { setSelectedIngredient } from '@/services/ingredient-details/ingredient-details-slice';
 import { useAppDispatch } from '@/services/store';
 import { DND_TYPES } from '@/utils/dndTypes';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';

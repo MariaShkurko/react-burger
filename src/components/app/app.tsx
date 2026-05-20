@@ -1,5 +1,5 @@
-import { useGetIngredientsQuery } from '@/api/burger-api';
-import { constructorIngredientsSelector } from '@/services/selectors';
+import { useGetIngredientsQuery } from '@/services/api/burger-api';
+import { constructorIngredientsSelector } from '@/services/burger-constructor/burger-constructor-slice';
 import { useAppSelector } from '@/services/store';
 import { getErrorMessage } from '@/utils/utils';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';

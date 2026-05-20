@@ -1,5 +1,7 @@
-import { setSelectedIngredient } from '@/services/ingredient-details-slice';
-import { selectedIngredientSelector } from '@/services/selectors';
+import {
+  selectedIngredientSelector,
+  setSelectedIngredient,
+} from '@/services/ingredient-details/ingredient-details-slice';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';

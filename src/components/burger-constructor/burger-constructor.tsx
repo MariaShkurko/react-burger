@@ -1,11 +1,12 @@
-import { useCreateOrderMutation } from '@/api/burger-api';
 import { useModal } from '@/hooks/useModal';
+import { useCreateOrderMutation } from '@/services/api/burger-api';
 import {
   clearConstructor,
+  constructorIngredientsSelector,
+  selectBurgerPrice,
   type TConstructorIngredients,
-} from '@/services/burger-constructor-slice';
-import { setOrder } from '@/services/order-details-slice';
-import { constructorIngredientsSelector, selectBurgerPrice } from '@/services/selectors';
+} from '@/services/burger-constructor/burger-constructor-slice';
+import { setOrder } from '@/services/order/order-details-slice';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { getErrorMessage } from '@/utils/utils';
 import {

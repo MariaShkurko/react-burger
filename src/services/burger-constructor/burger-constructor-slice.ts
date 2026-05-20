@@ -1,5 +1,11 @@
-import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSelector,
+  createSlice,
+  nanoid,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 
+import type { RootState } from '../types';
 import type { TExtendIngredient, TIngredient } from '@/utils/types';
 
 export type TConstructorIngredients = {
@@ -62,7 +68,61 @@ export const burgerConstructorSlice = createSlice({
       state.burgerConstructor = initialState.burgerConstructor;
     },
   },
+  selectors: {
+    constructorIngredientsSelector: (state) => state.burgerConstructor,
+  },
 });
+
+const selectApiIngredients = (state: RootState): TIngredient[] =>
+  (state.api?.queries?.getIngredients?.data as TIngredient[]) ?? [];
+
+export const ingredientsCounters = createSelector(
+  selectApiIngredients,
+  (state: RootState) => state.burgerConstructor.burgerConstructor,
+  (allIngredients, selectedIngredients): Record<string, number> => {
+    const ingredientsCounts: Record<string, number> = {};
+    if (selectedIngredients?.bun) {
+      ingredientsCounts[selectedIngredients.bun?._id] = 2;
+    }
+    if (selectedIngredients?.ingredients) {
+      selectedIngredients.ingredients.forEach(({ _id }) => {
+        if (ingredientsCounts[_id]) {
+          ingredientsCounts[_id] += 1;
+        } else {
+          ingredientsCounts[_id] = 1;
+        }
+      });
+    }
+    allIngredients.forEach((item) => {
+      if (!ingredientsCounts[item._id]) {
+        ingredientsCounts[item._id] = 0;
+      }
+    });
+
+    return ingredientsCounts;
+  }
+);
+
+export const selectBurgerPrice = createSelector(
+  (state: RootState) => state.burgerConstructor.burgerConstructor,
+  (constructorData: TConstructorIngredients): number => {
+    let bunPrice = 0;
+    let ingredientsPrice = 0;
+
+    if (constructorData.bun) {
+      bunPrice = constructorData.bun.price * 2;
+    }
+
+    if (constructorData.ingredients?.length) {
+      ingredientsPrice = constructorData.ingredients.reduce(
+        (total, ingredient) => total + ingredient.price,
+        0
+      );
+    }
+
+    return bunPrice + ingredientsPrice;
+  }
+);
 
 export const {
   setBun,
@@ -71,4 +131,5 @@ export const {
   moveIngredient,
   clearConstructor,
 } = burgerConstructorSlice.actions;
+export const { constructorIngredientsSelector } = burgerConstructorSlice.selectors;
 export default burgerConstructorSlice.reducer;

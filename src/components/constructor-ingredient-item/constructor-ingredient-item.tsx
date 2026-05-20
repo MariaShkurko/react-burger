@@ -1,4 +1,4 @@
-import { moveIngredient } from '@/services/burger-constructor-slice';
+import { moveIngredient } from '@/services/burger-constructor/burger-constructor-slice';
 import { useAppDispatch } from '@/services/store';
 import { DND_TYPES } from '@/utils/dndTypes';
 import {

@@ -1,4 +1,4 @@
-import { getOrder } from '@/services/selectors';
+import { getOrder } from '@/services/order/order-details-slice';
 import { useAppSelector } from '@/services/store';
 
 import DoneSvg from '../../assets/images/graphics.svg';

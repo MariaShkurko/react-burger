@@ -1,4 +1,4 @@
-import { ingredientsCounters } from '@/services/selectors';
+import { ingredientsCounters } from '@/services/burger-constructor/burger-constructor-slice';
 import { useAppSelector } from '@/services/store';
 
 import { IngredientItem } from '../ingredient-item/ingredient-item';

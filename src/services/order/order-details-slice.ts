@@ -16,7 +16,11 @@ export const orderDetailsSlice = createSlice({
       state.order = action.payload;
     },
   },
+  selectors: {
+    getOrder: (state) => state.order,
+  },
 });
 
 export const { setOrder } = orderDetailsSlice.actions;
+export const { getOrder } = orderDetailsSlice.selectors;
 export default orderDetailsSlice.reducer;
