@@ -12,3 +12,7 @@ export type TIngredient = {
   image_mobile: string;
   __v: number;
 };
+
+export type TExtendIngredient = TIngredient & {
+  _localId: string;
+};

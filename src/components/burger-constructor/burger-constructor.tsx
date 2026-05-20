@@ -1,44 +1,82 @@
+import { useCreateOrderMutation } from '@/api/burger-api';
 import { useModal } from '@/hooks/useModal';
-import { Button, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
+import {
+  clearConstructor,
+  type TConstructorIngredients,
+} from '@/services/burger-constructor-slice';
+import { setOrder } from '@/services/order-details-slice';
+import { constructorIngredientsSelector, selectBurgerPrice } from '@/services/selectors';
+import { useAppDispatch, useAppSelector } from '@/services/store';
+import { getErrorMessage } from '@/utils/utils';
+import {
+  Button,
+  CurrencyIcon,
+  Preloader,
+} from '@krgaa/react-developer-burger-ui-components';
+import { useState } from 'react';
 
 import { BurgerConstructorIngredients } from '../burger-constructor-ingredients/burger-constructor-ingredients';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 
-import type { TIngredient } from '@utils/types';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import styles from './burger-constructor.module.css';
 
 type TBurgerConstructorProps = {
-  ingredients: TIngredient[];
-  selectedIngredientIds: string[];
-  onDeleteIngredient: (id: string) => void;
+  ingredients: TConstructorIngredients;
 };
 
 export const BurgerConstructor = ({
   ingredients,
-  selectedIngredientIds,
-  onDeleteIngredient,
 }: TBurgerConstructorProps): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const burgerConstructor = useAppSelector(constructorIngredientsSelector);
+  const totalPrice = useAppSelector(selectBurgerPrice);
+
   const { isModalOpen, openModal, closeModal } = useModal();
 
-  const selectedIngredient = ingredients.filter(({ _id }) =>
-    selectedIngredientIds.includes(_id)
-  );
-  const totalPrice = selectedIngredient
-    ? selectedIngredient.reduce((sum, item) => (sum += item.price), 0)
-    : 0;
+  const [error, setError] = useState('');
+
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
+
+  const closeOrderModal = (): void => {
+    closeModal();
+    dispatch(clearConstructor());
+  };
+
+  const closeErrorModal = (): void => {
+    setError('');
+  };
 
   const onCreateOrder = (): void => {
-    openModal();
+    const create = async (): Promise<void> => {
+      if (!burgerConstructor) return;
+      const { bun, ingredients: burgerIngredients = [] } = burgerConstructor;
+      await createOrder({
+        ingredients: [
+          bun?._id ?? '',
+          ...burgerIngredients.map(({ _id }) => _id),
+          bun?._id ?? '',
+        ],
+      })
+        .unwrap()
+        .then((response) => {
+          dispatch(setOrder(response.order));
+          openModal();
+        })
+        .catch((err: FetchBaseQueryError) => {
+          setError(getErrorMessage(err) ?? 'Что-то пошло не так...');
+        });
+    };
+    void create();
   };
+
+  if (isLoading) return <Preloader />;
 
   return (
     <section className={`${styles.burger_constructor} pb-10`}>
-      <BurgerConstructorIngredients
-        ingredients={selectedIngredient}
-        onDelete={onDeleteIngredient}
-      />
+      <BurgerConstructorIngredients burgerConstructor={ingredients} />
       <div className={styles.total_block}>
         <div className={`${styles.total} mr-10 text text_type_digits-medium`}>
           <span>{totalPrice}</span>
@@ -55,8 +93,14 @@ export const BurgerConstructor = ({
       </div>
 
       {isModalOpen && (
-        <Modal onClose={closeModal}>
+        <Modal onClose={closeOrderModal}>
           <OrderDetails />
+        </Modal>
+      )}
+
+      {!!error && (
+        <Modal title="Ошибка" onClose={closeErrorModal}>
+          <p>{error}</p>
         </Modal>
       )}
     </section>
