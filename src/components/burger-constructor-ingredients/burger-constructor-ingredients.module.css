@@ -1,11 +1,31 @@
 .burger_constructor_ingredients {
   height: 60vh;
+  overflow: hidden;
+}
+
+.burger_constructor_ingredients.is-over {
+  background-color: rgb(255 165 0 / 10%);
+  border: 2px dashed orange;
+}
+
+.burger_constructor_ingredients.can-drop {
+  background-color: rgb(0 255 0 / 5%);
 }
 
 .list {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: calc(60vh - 80px * 2 - 16px * 2);
+  max-height: calc(60vh - 85px * 2 - 16px * 2);
   overflow-y: auto;
+}
+
+.no_image_item {
+  & > span > *:not(:nth-child(2)) {
+    display: none;
+  }
+
+  & > span > *:nth-child(2) {
+    justify-content: center;
+  }
 }

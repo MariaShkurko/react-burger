@@ -1,3 +1,6 @@
+import { ingredientsCounters } from '@/services/burger-constructor/burger-constructor-slice';
+import { useAppSelector } from '@/services/store';
+
 import { IngredientItem } from '../ingredient-item/ingredient-item';
 
 import type { TIngredient } from '@/utils/types';
@@ -7,20 +10,14 @@ import styles from './ingredient-list.module.css';
 type TIngredientItemProps = {
   title: string;
   ingredients: TIngredient[];
-  selectedIngredientIds: string[];
-  onSelectIngredient: (ingredient: TIngredient) => void;
 } & React.RefAttributes<HTMLDivElement>;
 
 export const IngredientList = ({
   title,
   ingredients,
-  selectedIngredientIds,
-  onSelectIngredient,
   ref,
 }: TIngredientItemProps): React.JSX.Element => {
-  const onClick = (ingredient: TIngredient): void => {
-    if (onSelectIngredient) onSelectIngredient(ingredient);
-  };
+  const counters = useAppSelector(ingredientsCounters);
 
   return (
     <div ref={ref}>
@@ -28,11 +25,7 @@ export const IngredientList = ({
       <ul className={`${styles.ingredient_list} mb-10 pl-4 pr-2`}>
         {ingredients.map((ingredient) => (
           <li key={ingredient._id}>
-            <IngredientItem
-              ingredient={ingredient}
-              count={selectedIngredientIds.includes(ingredient._id) ? 1 : 0}
-              onClick={() => onClick(ingredient)}
-            />
+            <IngredientItem ingredient={ingredient} count={counters[ingredient._id]} />
           </li>
         ))}
       </ul>

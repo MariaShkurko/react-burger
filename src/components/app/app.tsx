@@ -1,8 +1,8 @@
-import { IngredientApi } from '@/api/ingredient-api';
-import { HttpClient } from '@/utils/httpClient';
-import { HOST_API } from '@/utils/URLs';
+import { useGetIngredientsQuery } from '@/services/api/burger-api';
+import { constructorIngredientsSelector } from '@/services/burger-constructor/burger-constructor-slice';
+import { useAppSelector } from '@/services/store';
+import { getErrorMessage } from '@/utils/utils';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -10,58 +10,14 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 
 import { ErrorBlock } from '../error-block/error-block';
 
-import type { TIngredient } from '@/utils/types';
-
 import styles from './app.module.css';
 
-const httpClient = new HttpClient({
-  baseUrl: HOST_API,
-});
-const ingredientAPI = new IngredientApi(httpClient);
-
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState<TIngredient[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedIngredientIds, setSelectedIngredientIds] = useState<string[]>([
-    '692889f16bf770001bfeb4cc',
-    '692889f16bf770001bfeb4d7',
-    '692889f16bf770001bfeb4da',
-    '692889f16bf770001bfeb4cf',
-  ]);
+  const constructorIngredients = useAppSelector(constructorIngredientsSelector);
 
-  useEffect(() => {
-    ingredientAPI
-      .getIngredients()
-      .then((response) => {
-        if ('status' in response) {
-          throw new Error(response.message ?? 'Неизвестная ошибка');
-        }
-        setIngredients(response);
-      })
-      .catch((err) => {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Произошла неизвестная ошибка');
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const { data: ingredients = [], isLoading, error } = useGetIngredientsQuery();
 
-  // const onSelectIngredient = (id: string): void => {
-  //   setSelectedIngredientIds((prev) => {
-  //     if (prev.includes(id)) {
-  //       return prev.filter((item) => item !== id);
-  //     }
-  //     return [...prev, id];
-  //   });
-  // };
-  const onDeleteIngredient = (id: string): void => {
-    setSelectedIngredientIds((prev) => prev.filter((item) => item !== id));
-  };
+  const errorResponse = getErrorMessage(error);
 
   return (
     <div className={styles.app}>
@@ -70,19 +26,12 @@ export const App = (): React.JSX.Element => {
         Соберите бургер
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
-        {!!error && <ErrorBlock message={error} />}
-        {loading && <Preloader />}
-        {!error && !loading && (
+        {!!error && <ErrorBlock message={errorResponse!} />}
+        {isLoading && <Preloader />}
+        {!error && !isLoading && (
           <>
-            <BurgerIngredients
-              ingredients={ingredients}
-              selectedIngredientIds={selectedIngredientIds}
-            />
-            <BurgerConstructor
-              ingredients={ingredients}
-              selectedIngredientIds={selectedIngredientIds}
-              onDeleteIngredient={onDeleteIngredient}
-            />
+            <BurgerIngredients ingredients={ingredients} />
+            <BurgerConstructor ingredients={constructorIngredients} />
           </>
         )}
       </main>

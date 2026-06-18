@@ -1,3 +1,8 @@
+import {
+  selectedIngredientSelector,
+  setSelectedIngredient,
+} from '@/services/ingredient-details/ingredient-details-slice';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
 
@@ -12,15 +17,15 @@ import styles from './burger-ingredients.module.css';
 
 type TBurgerIngredientsProps = {
   ingredients: TIngredient[];
-  selectedIngredientIds: string[];
-  // onSelectIngredient: (id: string) => void;
 };
 
 export const BurgerIngredients = ({
   ingredients,
-  selectedIngredientIds,
-  // onSelectIngredient,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+
+  const selectedIngredient = useAppSelector(selectedIngredientSelector);
+
   const { buns, mains, sauces } = getFilteredIngredients(ingredients);
 
   const ingredientsBlockRef = useRef<HTMLDivElement>(null);
@@ -29,7 +34,6 @@ export const BurgerIngredients = ({
   const sauceRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<'bun' | 'main' | 'sauce'>('bun');
-  const [selectedIngredient, setSelectedIngredient] = useState<TIngredient | null>(null);
 
   useEffect(() => {
     const block = ingredientsBlockRef.current;
@@ -70,12 +74,8 @@ export const BurgerIngredients = ({
     }
   };
 
-  const onSelectIngredient = (ingredient: TIngredient): void => {
-    setSelectedIngredient(ingredient);
-  };
-
   const handleCloseModal = (): void => {
-    setSelectedIngredient(null);
+    dispatch(setSelectedIngredient(null));
   };
 
   return (
@@ -109,27 +109,9 @@ export const BurgerIngredients = ({
         ref={ingredientsBlockRef}
         className={`${styles.ingredients_block} pr-2 custom-scroll`}
       >
-        <IngredientList
-          ref={bunRef}
-          title="Булки"
-          ingredients={buns}
-          onSelectIngredient={onSelectIngredient}
-          selectedIngredientIds={selectedIngredientIds}
-        />
-        <IngredientList
-          ref={mainRef}
-          title="Начинки"
-          ingredients={mains}
-          onSelectIngredient={onSelectIngredient}
-          selectedIngredientIds={selectedIngredientIds}
-        />
-        <IngredientList
-          ref={sauceRef}
-          title="Соусы"
-          ingredients={sauces}
-          onSelectIngredient={onSelectIngredient}
-          selectedIngredientIds={selectedIngredientIds}
-        />
+        <IngredientList ref={bunRef} title="Булки" ingredients={buns} />
+        <IngredientList ref={mainRef} title="Начинки" ingredients={mains} />
+        <IngredientList ref={sauceRef} title="Соусы" ingredients={sauces} />
       </div>
 
       {!!selectedIngredient && (

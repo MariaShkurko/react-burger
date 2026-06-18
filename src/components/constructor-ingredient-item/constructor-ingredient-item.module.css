@@ -1,9 +1,10 @@
 .ingredient_item {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  height: 208px;
+  gap: 8px;
+  cursor: grab;
+  transition: all 0.2s ease;
 }
 
 .ingredient_item:hover {
@@ -12,17 +13,19 @@
 }
 
 .dragging {
+  z-index: 1000;
   box-shadow: 0 8px 16px rgb(0 0 0 / 20%);
   transform: scale(1.05);
   opacity: 0.5;
 }
 
-.ingredient_image {
-  display: block;
-}
-
-.ingredient_price {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.dragging::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #ff9800;
+  font-size: 24px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  content: '⇅';
 }
