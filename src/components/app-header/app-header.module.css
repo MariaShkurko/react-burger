@@ -23,6 +23,10 @@
 
 .link_active {
   color: var(--text-primary-color);
+
+  & svg {
+    fill: var(--text-primary-color);
+  }
 }
 
 .link_position_last {

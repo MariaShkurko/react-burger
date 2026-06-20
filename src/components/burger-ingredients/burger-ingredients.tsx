@@ -1,31 +1,14 @@
-import {
-  selectedIngredientSelector,
-  setSelectedIngredient,
-} from '@/services/ingredient-details/ingredient-details-slice';
-import { useAppDispatch, useAppSelector } from '@/services/store';
+import { useGetIngredientsQuery } from '@/services/api/burger-api';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
 
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { IngredientList } from '../ingredient-list/ingredient-list';
-import { Modal } from '../modal/modal';
 import { getFilteredIngredients } from './utils';
-
-import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
-  const dispatch = useAppDispatch();
-
-  const selectedIngredient = useAppSelector(selectedIngredientSelector);
-
+export const BurgerIngredients = (): React.JSX.Element => {
+  const { data: ingredients = [] } = useGetIngredientsQuery();
   const { buns, mains, sauces } = getFilteredIngredients(ingredients);
 
   const ingredientsBlockRef = useRef<HTMLDivElement>(null);
@@ -74,10 +57,6 @@ export const BurgerIngredients = ({
     }
   };
 
-  const handleCloseModal = (): void => {
-    dispatch(setSelectedIngredient(null));
-  };
-
   return (
     <section className={styles.burger_ingredients}>
       <nav className="mb-10">
@@ -113,12 +92,6 @@ export const BurgerIngredients = ({
         <IngredientList ref={mainRef} title="Начинки" ingredients={mains} />
         <IngredientList ref={sauceRef} title="Соусы" ingredients={sauces} />
       </div>
-
-      {!!selectedIngredient && (
-        <Modal onClose={handleCloseModal} title="Детали ингредиента">
-          <IngredientDetails ingredient={selectedIngredient} />
-        </Modal>
-      )}
     </section>
   );
 };

@@ -4,10 +4,10 @@ import {
   clearConstructor,
   constructorIngredientsSelector,
   selectBurgerPrice,
-  type TConstructorIngredients,
 } from '@/services/burger-constructor/burger-constructor-slice';
 import { setOrder } from '@/services/order/order-details-slice';
 import { useAppDispatch, useAppSelector } from '@/services/store';
+import { selectUser } from '@/services/user/user-slice';
 import { getErrorMessage } from '@/utils/utils';
 import {
   Button,
@@ -24,16 +24,11 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  ingredients: TConstructorIngredients;
-};
-
-export const BurgerConstructor = ({
-  ingredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
+export const BurgerConstructor = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const burgerConstructor = useAppSelector(constructorIngredientsSelector);
   const totalPrice = useAppSelector(selectBurgerPrice);
+  const user = useAppSelector(selectUser);
 
   const { isModalOpen, openModal, closeModal } = useModal();
 
@@ -77,7 +72,7 @@ export const BurgerConstructor = ({
 
   return (
     <section className={`${styles.burger_constructor} pb-10`}>
-      <BurgerConstructorIngredients burgerConstructor={ingredients} />
+      <BurgerConstructorIngredients burgerConstructor={burgerConstructor} />
       <div className={styles.total_block}>
         <div className={`${styles.total} mr-10 text text_type_digits-medium`}>
           <span>{totalPrice}</span>
@@ -87,7 +82,7 @@ export const BurgerConstructor = ({
           onClick={onCreateOrder}
           size="large"
           htmlType="button"
-          disabled={totalPrice === 0}
+          disabled={totalPrice === 0 || !user}
         >
           Оформить заказ
         </Button>
