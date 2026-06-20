@@ -89,7 +89,7 @@ export const Profile = (): React.JSX.Element | null => {
       />
       {isShowButtons && (
         <div className={styles.button_group}>
-          <Button onClick={onCancel} size="medium" type="secondary" htmlType="submit">
+          <Button onClick={onCancel} size="medium" type="secondary" htmlType="button">
             Отмена
           </Button>
           <Button size="medium" type="primary" htmlType="submit">

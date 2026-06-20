@@ -59,7 +59,7 @@ export const RegisterPage = (): React.JSX.Element | null => {
   return (
     <Page>
       <div className={styles.wrapper}>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={onClick}>
           <h1 className="text text_type_main-large">Регистрация</h1>
           <Input
             name="name"
@@ -90,7 +90,7 @@ export const RegisterPage = (): React.JSX.Element | null => {
 
           {!!error && <ErrorBlock message={error} />}
 
-          <Button onClick={onClick} size="medium" type="primary" htmlType="submit">
+          <Button size="medium" type="primary" htmlType="submit">
             Зарегистрироваться
           </Button>
         </form>

@@ -57,7 +57,7 @@ export const LoginPage = (): React.JSX.Element | null => {
   return (
     <Page>
       <div className={styles.wrapper}>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={onClick}>
           <h1 className="text text_type_main-large">Вход</h1>
           <Input
             name="email"
@@ -80,7 +80,7 @@ export const LoginPage = (): React.JSX.Element | null => {
 
           {!!error && <ErrorBlock message={error} />}
 
-          <Button onClick={onClick} size="medium" type="primary" htmlType="submit">
+          <Button size="medium" type="primary" htmlType="submit">
             Войти
           </Button>
         </form>

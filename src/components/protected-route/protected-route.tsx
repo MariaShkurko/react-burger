@@ -1,6 +1,7 @@
 import { ROUTES } from '@/constants/ROUTES';
 import { useAppSelector } from '@/services/store';
 import { selectIsAuthChecked, selectUser } from '@/services/user/user-slice';
+import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { Navigate, useLocation, type Location } from 'react-router-dom';
 
 type TProtectedRouteProps = {
@@ -17,7 +18,7 @@ export const ProtectedRoute: React.FC<TProtectedRouteProps> = ({
   const location = useLocation() as Location<{ from: Location }>;
 
   if (!isAuthChecked) {
-    return null;
+    return <Preloader />;
   }
 
   if (onlyUnAuth && user) {

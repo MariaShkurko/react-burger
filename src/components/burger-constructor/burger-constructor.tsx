@@ -1,3 +1,4 @@
+import { ROUTES } from '@/constants/ROUTES';
 import { useModal } from '@/hooks/useModal';
 import { useCreateOrderMutation } from '@/services/api/burger-api';
 import {
@@ -15,6 +16,7 @@ import {
   Preloader,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { BurgerConstructorIngredients } from '../burger-constructor-ingredients/burger-constructor-ingredients';
 import { Modal } from '../modal/modal';
@@ -25,6 +27,8 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const burgerConstructor = useAppSelector(constructorIngredientsSelector);
   const totalPrice = useAppSelector(selectBurgerPrice);
@@ -46,6 +50,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
   };
 
   const onCreateOrder = (): void => {
+    if (!user) {
+      void navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
     const create = async (): Promise<void> => {
       if (!burgerConstructor) return;
       const { bun, ingredients: burgerIngredients = [] } = burgerConstructor;
@@ -82,7 +91,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
           onClick={onCreateOrder}
           size="large"
           htmlType="button"
-          disabled={totalPrice === 0 || !user}
+          disabled={totalPrice === 0}
         >
           Оформить заказ
         </Button>

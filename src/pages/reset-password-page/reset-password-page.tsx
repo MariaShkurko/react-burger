@@ -68,7 +68,7 @@ export const ResetPasswordPage = (): React.JSX.Element | null => {
   return (
     <Page>
       <div className={styles.wrapper}>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={onClick}>
           <h1 className="text text_type_main-large">Восстановление пароля</h1>
           <Input
             name="password"
@@ -91,7 +91,7 @@ export const ResetPasswordPage = (): React.JSX.Element | null => {
 
           {!!error && <ErrorBlock message={error} />}
 
-          <Button onClick={onClick} size="medium" type="primary" htmlType="submit">
+          <Button size="medium" type="primary" htmlType="submit">
             Сохранить
           </Button>
         </form>
