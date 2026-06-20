@@ -1,13 +1,14 @@
+import { ROUTES } from '@/constants/ROUTES';
 import { useModal } from '@/hooks/useModal';
 import { useCreateOrderMutation } from '@/services/api/burger-api';
 import {
   clearConstructor,
   constructorIngredientsSelector,
   selectBurgerPrice,
-  type TConstructorIngredients,
 } from '@/services/burger-constructor/burger-constructor-slice';
 import { setOrder } from '@/services/order/order-details-slice';
 import { useAppDispatch, useAppSelector } from '@/services/store';
+import { selectUser } from '@/services/user/user-slice';
 import { getErrorMessage } from '@/utils/utils';
 import {
   Button,
@@ -15,6 +16,7 @@ import {
   Preloader,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { BurgerConstructorIngredients } from '../burger-constructor-ingredients/burger-constructor-ingredients';
 import { Modal } from '../modal/modal';
@@ -24,16 +26,13 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  ingredients: TConstructorIngredients;
-};
-
-export const BurgerConstructor = ({
-  ingredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
+export const BurgerConstructor = (): React.JSX.Element => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const burgerConstructor = useAppSelector(constructorIngredientsSelector);
   const totalPrice = useAppSelector(selectBurgerPrice);
+  const user = useAppSelector(selectUser);
 
   const { isModalOpen, openModal, closeModal } = useModal();
 
@@ -51,6 +50,11 @@ export const BurgerConstructor = ({
   };
 
   const onCreateOrder = (): void => {
+    if (!user) {
+      void navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
     const create = async (): Promise<void> => {
       if (!burgerConstructor) return;
       const { bun, ingredients: burgerIngredients = [] } = burgerConstructor;
@@ -77,7 +81,7 @@ export const BurgerConstructor = ({
 
   return (
     <section className={`${styles.burger_constructor} pb-10`}>
-      <BurgerConstructorIngredients burgerConstructor={ingredients} />
+      <BurgerConstructorIngredients burgerConstructor={burgerConstructor} />
       <div className={styles.total_block}>
         <div className={`${styles.total} mr-10 text text_type_digits-medium`}>
           <span>{totalPrice}</span>

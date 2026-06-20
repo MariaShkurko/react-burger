@@ -1,0 +1,12 @@
+export { Home } from './home/home';
+export { IngredientModal } from './ingredient-modal/ingredient-modal';
+export { Ingredient } from './ingredient/ingredient';
+export { RegisterPage } from './register-page/register-page';
+export { LoginPage } from './login-page/login-page';
+export { ForgotPasswordPage } from './forgot-password-page/forgot-password-page';
+export { ResetPasswordPage } from './reset-password-page/reset-password-page';
+export { ProfilePage } from './profile-page/profile-page';
+export { Profile } from './profile-page/profile/profile';
+export { ProfileOrderPage } from './profile-page/orders/orders';
+export { FeedPage } from './feed-page/feed-page';
+export { NotFoundPage } from './not-found-page/not-found-page';
